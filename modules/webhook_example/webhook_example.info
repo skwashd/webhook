@@ -1,0 +1,9 @@
+name = Webhook Example
+description = Example Webhook for creating logging github commits to watchdog.
+core = 7.x
+package = Features
+dependencies[] = ctools
+dependencies[] = webhook
+features[ctools][] = webhook:webhook:1
+features[features_api][] = api:1
+features[webhook][] = github

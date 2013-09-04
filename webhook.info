@@ -1,0 +1,10 @@
+name = Webhook
+description = Webhook callback handler.
+
+core = 7.x
+
+dependencies[] = ctools
+
+files[] = plugins/unserializer/interface.inc
+files[] = plugins/processor/interface.inc
+
