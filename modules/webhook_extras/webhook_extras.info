@@ -1,0 +1,13 @@
+name = Webhook Extras
+description = Useful plugins for the webhook module.
+
+core = 7.x
+
+dependencies[] = webhook
+
+; Unserializers
+files[] = includes/Webhook_Plugins_Unserializer_Interface.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Autodetect.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_UrlEncoded.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc
