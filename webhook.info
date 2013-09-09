@@ -5,6 +5,15 @@ core = 7.x
 
 dependencies[] = ctools
 
-files[] = plugins/unserializer/interface.inc
-files[] = plugins/processor/interface.inc
+; Export UI
+files[] = plugins/export_ui/webhook.inc
 
+;Processors
+files[] = includes/Webhook_Plugins_Processor_Interface.inc
+
+; Unserializers
+files[] = includes/Webhook_Plugins_Unserializer_Interface.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Autodetect.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_UrlEncoded.class.inc
+files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc

@@ -7,3 +7,6 @@ dependencies[] = webhook
 features[ctools][] = webhook:webhook:1
 features[features_api][] = api:1
 features[webhook][] = github
+
+files[] = plugins/processor/Webhook_Example_Plugins_Processor_GithubLog.class.inc
+files[] = plugins/unserializer/Webhook_Example_Plugins_Unserializer_Github.class.inc
