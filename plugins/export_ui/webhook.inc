@@ -5,7 +5,7 @@ $plugin = array(
   'menu' => array(
     'menu prefix' => 'admin/config/services',
     'menu item' => 'webhook',
-    'menu title' => 'Webhooks', 
+    'menu title' => 'Webhooks',
     'menu description' => 'Administer webhooks.',
   ),
   'title singular' => t('webhook'),
@@ -35,7 +35,7 @@ function webhook_form(&$form, &$form_state) {
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#description' => t('The name of the webhhook.'),
+    '#description' => t('The name of the webhook.'),
     '#default_value' => $webhook->title,
     '#maxlength' => 100,
     '#required' => TRUE,
@@ -60,7 +60,7 @@ function webhook_form(&$form, &$form_state) {
   $form['processor'] = array(
     '#type' => 'select',
     '#title' => t('Processor'),
-    '#default_value' => $webhook->unserializer,
+    '#default_value' => $webhook->processor,
     '#options' => webhook_get_processor_list(),
     '#required' => TRUE,
     '#description' => t('Select plugin to be used to process the data from the request.'),
