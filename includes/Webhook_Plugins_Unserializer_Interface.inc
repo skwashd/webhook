@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Webhook Unserializer Inerface file.
+ * Webhook Unserializer Interface file.
  */
 
 /**
@@ -24,12 +24,4 @@ interface Webhook_Plugins_Unserializer_Interface {
    * @throws Webhook_Plugins_Unserializer_InvalidDataException
    */
   public function unserialize($data);
-}
-
-/**
- * Invalid data exception class.
- *
- * @todo move this to its own file.
- */
-class Webhook_Plugins_Unserializer_InvalidDataException extends Exception {
 }

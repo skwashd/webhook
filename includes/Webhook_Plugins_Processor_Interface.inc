@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Webhook Processor Inerface file.
+ * Webhook Processor Interface file.
  */
 
 /**
@@ -37,12 +37,3 @@ interface Webhook_Plugins_Processor_Interface {
    */
   public function process(stdClass $data);
 }
-
-/**
- * Processing error exception class.
- *
- * @todo move this to its own file.
- */
-class Webhook_Plugins_Processor_ErrorException extends Exception {
-}
-

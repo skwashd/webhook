@@ -10,6 +10,8 @@ files[] = plugins/export_ui/webhook.inc
 
 ;Processors
 files[] = includes/Webhook_Plugins_Processor_Interface.inc
+files[] = includes/Webhook_Plugins_Processor_ErrorException.inc
 
 ; Unserializers
 files[] = includes/Webhook_Plugins_Unserializer_Interface.inc
+files[] = includes/Webhook_Plugins_Unserializer_InvalidDataException.class.inc
