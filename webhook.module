@@ -63,15 +63,80 @@ function webhook_ctools_plugin_type() {
   $plugins = array();
 
   $plugins['processor'] = array(
-    'classes' => array('handler'),
+    'cache' => TRUE,
+    'classes' => array('processor'),
+    'use hooks' => TRUE,
   );
 
   $plugins['unserializer'] = array(
-    'classes' => array('handler'),
+    'cache' => TRUE,
+    'classes' => array('unserializer'),
+    'use hooks' => TRUE,
   );
 
   return $plugins;
 }
+
+/**
+ * Implements hook_webhook_processor().
+ */
+function webhook_webhook_processor() {
+
+  $path = drupal_get_path('module', 'webhook') . '/plugins/processor';
+  $plugins = array();
+
+  return $plugins;
+}
+
+/**
+ * Implements hook_webhook_unserializer().
+ */
+function webhook_webhook_unserializer() {
+
+  $path = drupal_get_path('module', 'webhook') . '/plugins/unserializer';
+  $plugins = array();
+
+  $plugins['autodetect'] = array(
+    'title' => t('Autodetect'),
+    'unserializer' => array(
+      'path' => $path,
+      'file' => 'Webhook_Plugins_Unserializer_Autodetect.class.inc',
+      'class' => 'Webhook_Plugins_Unserializer_Autodetect',
+    ),
+  );
+
+
+  $plugins['json'] = array(
+    'title' => t('JSON'),
+    'unserializer' => array(
+      'path' => $path,
+      'file' => 'Webhook_Plugins_Unserializer_Json.class.inc',
+      'class' => 'Webhook_Plugins_Unserializer_Json',
+    ),
+  );
+
+  $plugins['urlencoded'] = array(
+    'title' => t('URL encoded key=value'),
+    'unserializer' => array(
+      'path' => $path,
+      'file' => 'Webhook_Plugins_Unserializer_UrlEncoded.class.inc',
+      'class' => 'Webhook_Plugins_Unserializer_UrlEncoded',
+    ),
+  );
+
+
+  $plugins['xml'] = array(
+    'title' => t('XML'),
+    'unserializer' => array(
+      'path' => $path,
+      'file' => 'Webhook_Plugins_Unserializer_Xml.class.inc',
+      'class' => 'Webhook_Plugins_Unserializer_Xml',
+    ),
+  );
+
+  return $plugins;
+}
+
 
 /**
  * Processes a webhook trigger call.

@@ -98,3 +98,12 @@ function webhook_uninstall() {
     variable_del($variable);
   }
 }
+
+/**
+ * Remove redundant webhook_extras module.
+ */
+function webhook_update_7000(&$sandbox) {
+  $modules = array('webhook_extras');
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+}

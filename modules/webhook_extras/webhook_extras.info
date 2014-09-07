@@ -1,13 +1,4 @@
-name = Webhook Extras
-description = Useful plugins for the webhook module.
+name = Webhook Extras [DEPRECATED]
+description = This module is no longer needed - please uninstall.
 
 core = 7.x
-
-dependencies[] = webhook
-
-; Unserializers
-files[] = includes/Webhook_Plugins_Unserializer_Interface.inc
-files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Autodetect.class.inc
-files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc
-files[] = plugins/unserializer/Webhook_Plugins_Unserializer_UrlEncoded.class.inc
-files[] = plugins/unserializer/Webhook_Plugins_Unserializer_Json.class.inc
