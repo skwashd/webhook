@@ -137,7 +137,6 @@ function webhook_webhook_unserializer() {
   return $plugins;
 }
 
-
 /**
  * Processes a webhook trigger call.
  *
@@ -216,10 +215,10 @@ function webhook_load_multiple(array $names) {
  *   The name of the unserializer to load.
  *
  * @return Webhook_Unserializer
- *   The the instatiated unserializer object.
+ *   The instantiated unserializer object.
  */
 function webhook_load_unserializer($name) {
-  $class_name = ctools_plugin_load_class('webhook', 'unserializer', $name, 'handler');
+  $class_name = ctools_plugin_load_class('webhook', 'unserializer', $name, 'unserializer');
   return new $class_name();
 }
 
@@ -230,10 +229,10 @@ function webhook_load_unserializer($name) {
  *   The name of the processor to load.
  *
  * @return Webhook_Processor
- *   The the instatiated processor object.
+ *   The instantiated processor object.
  */
 function webhook_load_processor($name) {
-  $class_name = ctools_plugin_load_class('webhook', 'processor', $name, 'handler');
+  $class_name = ctools_plugin_load_class('webhook', 'processor', $name, 'processor');
   return new $class_name();
 }
 
@@ -241,7 +240,7 @@ function webhook_load_processor($name) {
  * Fetches a list of processor plugins.
  *
  * @return array
- *   An associative array of the processors keyed by name. 
+ *   An associative array of the processors keyed by name.
  */
 function webhook_get_processor_list() {
   $plugins = array();
