@@ -160,12 +160,23 @@ function webhook_process_request($name) {
 
   $unserializer = webhook_load_unserializer($webhook->unserializer);
   $raw_post = file_get_contents("php://input");
-  $data = $unserializer->unserialize($raw_post);
+  try {
+    $data = $unserializer->unserialize($raw_post);
+  }
+  catch (Webhook_Plugins_Unserializer_InvalidDataException $e) {
+    return webhook_process_unserializer_error($name, $raw_data, $e);
+  }
 
   $processor = webhook_load_processor($webhook->processor);
-  $response = $processor->process($data);
+  try {
+    $response = $processor->process($data);
+  }
+  catch (Webhook_Plugins_Processor_ErrorException $e) {
+    return webhook_process_processor_error($name, $data, $e);
+  }
 
-  return $response;
+  drupal_add_http_header('Status', '200 OK');
+  drupal_exit();
 }
 
 /**
@@ -264,3 +275,113 @@ function webhook_get_unserlizer_list() {
   return $plugins;
 }
 
+/**
+ * Exception handler.
+ */
+function webhook_process_error(Exception $e) {
+  $message = $e->getMessage();
+  $code = $e->getCode();
+  if (!$code || !isset($http_codes[$code])) {
+    $code = 400;
+  }
+  $status = $http_codes[$code];
+
+  // Lifted from https://stackoverflow.com/a/3914021.
+  $http_codes = array(
+    100 => 'Continue',
+    101 => 'Switching Protocols',
+    102 => 'Processing',
+    200 => 'OK',
+    201 => 'Created',
+    202 => 'Accepted',
+    203 => 'Non-Authoritative Information',
+    204 => 'No Content',
+    205 => 'Reset Content',
+    206 => 'Partial Content',
+    207 => 'Multi-Status',
+    300 => 'Multiple Choices',
+    301 => 'Moved Permanently',
+    302 => 'Found',
+    303 => 'See Other',
+    304 => 'Not Modified',
+    305 => 'Use Proxy',
+    306 => 'Switch Proxy',
+    307 => 'Temporary Redirect',
+    400 => 'Bad Request',
+    401 => 'Unauthorized',
+    402 => 'Payment Required',
+    403 => 'Forbidden',
+    404 => 'Not Found',
+    405 => 'Method Not Allowed',
+    406 => 'Not Acceptable',
+    407 => 'Proxy Authentication Required',
+    408 => 'Request Timeout',
+    409 => 'Conflict',
+    410 => 'Gone',
+    411 => 'Length Required',
+    412 => 'Precondition Failed',
+    413 => 'Request Entity Too Large',
+    414 => 'Request-URI Too Long',
+    415 => 'Unsupported Media Type',
+    416 => 'Requested Range Not Satisfiable',
+    417 => 'Expectation Failed',
+    418 => 'I\'m a teapot',
+    422 => 'Unprocessable Entity',
+    423 => 'Locked',
+    424 => 'Failed Dependency',
+    425 => 'Unordered Collection',
+    426 => 'Upgrade Required',
+    449 => 'Retry With',
+    450 => 'Blocked by Windows Parental Controls',
+    500 => 'Internal Server Error',
+    501 => 'Not Implemented',
+    502 => 'Bad Gateway',
+    503 => 'Service Unavailable',
+    504 => 'Gateway Timeout',
+    505 => 'HTTP Version Not Supported',
+    506 => 'Variant Also Negotiates',
+    507 => 'Insufficient Storage',
+    509 => 'Bandwidth Limit Exceeded',
+    510 => 'Not Extended'
+);
+
+  drupal_add_http_header('Status', "$code $status");
+  $args = array(
+    '@code' => $code,
+    '@status' => $status,
+    '@body' => $message,
+  );
+  print t("<html><head><title>@code @status</title></head><body><h1>@status</h1><p>@body</p></body></html>", $args);
+
+  drupal_exit();
+}
+
+/**
+ * Handles processor exceptions.
+ */
+function webhook_process_processor_error($name, $data, Webhook_Plugins_Processor_ErrorException $e) {
+
+  $args = array(
+    '@name' => $name,
+    '@error' => $e->getMessage(),
+    '@data' => print_r($data, TRUE),
+  );
+  watchdog('webhook', 'Error processing @name.<br />Error: @error<br />Data: <pre>@data</pre>', $args, WATCHDOG_ERROR);
+
+  return webhook_process_error($e);
+}
+
+/**
+ * Handles unserialiser exceptions.
+ */
+function webhook_process_unserializer_error($body, Webhook_Plugins_Unserializer_InvalidDataException $e) {
+
+  $args = array(
+    '@name' => $name,
+    '@error' => $e->getMessage(),
+    '@data' => $body,
+  );
+  watchdog('webhook', 'Error unserializing @name.<br />Error: @error<br />Body: @body', $args, WATCHDOG_ERROR);
+
+  return webhook_process_error($e);
+}

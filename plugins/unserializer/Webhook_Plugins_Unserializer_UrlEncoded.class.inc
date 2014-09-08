@@ -9,9 +9,12 @@
  * Webhook unserializer plugin for URL encoded form data.
  */
 class Webhook_Plugins_Unserializer_UrlEncoded implements Webhook_Plugins_Unserializer_Interface {
+  /**
+   * {@inheritdoc}
+   */
   public function unserialize($data) {
     $vars = array();
     parse_str($data, $vars);
-    return $vars;
+    return (object) $vars;
   }
 }

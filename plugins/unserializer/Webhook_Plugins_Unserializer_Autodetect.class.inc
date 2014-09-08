@@ -9,10 +9,15 @@
  * Webhook unserializer plugin that autodetects the input.
  */
 class Webhook_Plugins_Unserializer_Autodetect implements Webhook_Plugins_Unserializer_Interface {
+
+  /**
+   * {@inheritdoc}
+   */
   public function unserialize($data) {
     switch($_SERVER['CONTENT_TYPE']) {
       case 'application/json':
-      case 'application/javascript': //JSON-P
+      // JSON-P
+      case 'application/javascript':
         $handler = 'json';
         break;
       case 'text/xml':
@@ -23,7 +28,7 @@ class Webhook_Plugins_Unserializer_Autodetect implements Webhook_Plugins_Unseria
         $handler = 'urlencoded';
         break;
       default:
-        throw new Webhook_Plugins_Unserializer_InvalidDataException('Invalid content type.');
+        throw new Webhook_Plugins_Unserializer_InvalidDataException(('Invalid content type.'), 406);
     }
 
     $plugin = webhook_load_unserializer($handler);
