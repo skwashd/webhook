@@ -41,7 +41,6 @@ function webhook_example_webhook_processor() {
 function webhook_example_webhook_unserializer() {
 
   $path = drupal_get_path('module', 'webhook_example') . '/plugins/unserializer';
-
   $plugins = array();
 
   $plugins['github'] = array(
