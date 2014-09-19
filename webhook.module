@@ -82,6 +82,8 @@ function webhook_ctools_plugin_type() {
  */
 function webhook_webhook_processor() {
 
+  require_once __DIR__ . "/includes/Webhook_Plugins_Processor_Interface.inc";
+
   $path = drupal_get_path('module', 'webhook') . '/plugins/processor';
   $plugins = array();
 
@@ -92,6 +94,8 @@ function webhook_webhook_processor() {
  * Implements hook_webhook_unserializer().
  */
 function webhook_webhook_unserializer() {
+
+  require_once __DIR__ . "/includes/Webhook_Plugins_Unserializer_Interface.inc";
 
   $path = drupal_get_path('module', 'webhook') . '/plugins/unserializer';
   $plugins = array();
