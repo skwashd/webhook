@@ -109,7 +109,6 @@ function webhook_webhook_unserializer() {
     ),
   );
 
-
   $plugins['json'] = array(
     'title' => t('JSON'),
     'unserializer' => array(
@@ -127,7 +126,6 @@ function webhook_webhook_unserializer() {
       'class' => 'Webhook_Plugins_Unserializer_UrlEncoded',
     ),
   );
-
 
   $plugins['xml'] = array(
     'title' => t('XML'),
@@ -168,12 +166,12 @@ function webhook_process_request($name) {
     $data = $unserializer->unserialize($raw_post);
   }
   catch (Webhook_Plugins_Unserializer_InvalidDataException $e) {
-    return webhook_process_unserializer_error($name, $raw_data, $e);
+    return webhook_process_unserializer_error($name, $raw_post, $e);
   }
 
   $processor = webhook_load_processor($webhook->processor);
   try {
-    $response = $processor->process($data);
+    $processor->process($data);
   }
   catch (Webhook_Plugins_Processor_ErrorException $e) {
     return webhook_process_processor_error($name, $data, $e);
@@ -283,12 +281,6 @@ function webhook_get_unserlizer_list() {
  * Exception handler.
  */
 function webhook_process_error(Exception $e) {
-  $message = $e->getMessage();
-  $code = $e->getCode();
-  if (!$code || !isset($http_codes[$code])) {
-    $code = 400;
-  }
-  $status = $http_codes[$code];
 
   // Lifted from https://stackoverflow.com/a/3914021.
   $http_codes = array(
@@ -346,8 +338,16 @@ function webhook_process_error(Exception $e) {
     506 => 'Variant Also Negotiates',
     507 => 'Insufficient Storage',
     509 => 'Bandwidth Limit Exceeded',
-    510 => 'Not Extended'
-);
+    510 => 'Not Extended',
+  );
+
+  $message = $e->getMessage();
+  $code = $e->getCode();
+  if (!$code || !isset($http_codes[$code])) {
+    $code = 400;
+  }
+
+  $status = $http_codes[$code];
 
   drupal_add_http_header('Status', "$code $status");
   $args = array(
@@ -378,7 +378,7 @@ function webhook_process_processor_error($name, $data, Webhook_Plugins_Processor
 /**
  * Handles unserialiser exceptions.
  */
-function webhook_process_unserializer_error($body, Webhook_Plugins_Unserializer_InvalidDataException $e) {
+function webhook_process_unserializer_error($name, $body, Webhook_Plugins_Unserializer_InvalidDataException $e) {
 
   $args = array(
     '@name' => $name,
